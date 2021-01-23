@@ -1,7 +1,9 @@
 import { React, Component } from "react";
 import Subject from "./components/Subject";
 import TOC from "./components/TOC";
-import Content from "./components/Content";
+import Control from "./components/Control";
+import ReadContent from "./components/ReadContent";
+import CreateContent from "./components/CreateContent";
 import "./App.css";
 
 class App extends Component {
@@ -22,10 +24,12 @@ class App extends Component {
 	render() {
 		console.log("App render");
 		let _title,
-			_desc = null;
+			_desc,
+			_article = null;
 		if (this.state.mode === "welcome") {
 			_title = this.state.welcome.title;
 			_desc = this.state.welcome.desc;
+			_article = <ReadContent title={_title} desc={_desc} />;
 		} else if (this.state.mode === "read") {
 			this.state.contents.forEach((content) => {
 				if (content.id === this.state.selected_content_id) {
@@ -33,6 +37,9 @@ class App extends Component {
 					_desc = content.desc;
 				}
 			});
+			_article = <ReadContent title={_title} desc={_desc} />;
+		} else if (this.state.mode === "create") {
+			_article = <CreateContent />;
 		}
 		return (
 			<div className="App">
@@ -52,7 +59,14 @@ class App extends Component {
 					}}
 					data={this.state.contents}
 				/>
-				<Content title={_title} desc={_desc} />
+				<Control
+					onChangeMode={(_mode) => {
+						this.setState({
+							mode: _mode,
+						});
+					}}
+				/>
+				{_article}
 			</div>
 		);
 	}
